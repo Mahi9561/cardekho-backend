@@ -46,6 +46,13 @@ export const login = async (email: string, password: string) => {
   );
 
   try {
+    console.debug("Creating session for user:", user.user_id);
+    console.debug("Session payload:", {
+      user_id: user.user_id,
+      token: token?.substring(0, 10) + "...",
+      device: "web",
+    });
+
     await Session.create({
       user_id: user.user_id,
       token,
@@ -54,19 +61,25 @@ export const login = async (email: string, password: string) => {
       expiresAt: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
       createdOn: new Date(),
     });
-    console.log("Session created successfully");
+    console.log("Session created successfully", { user_id: user.user_id });
   } catch (sessionError) {
-    // Log session creation error but don't fail login
-    console.warn("Session creation failed:", sessionError);
+    // Log session creation error with details but don't fail login
+    if (sessionError && (sessionError as any).stack) {
+      console.error((sessionError as any).stack);
+    }
   }
 
   return { user, token };
 };
 
 export const logout = async (userId: number, token: string) => {
-  await Session.destroy({
-    where: { user_id: userId, token },
+  const deleted = await Session.destroy({
+    where: { token },
   });
+
+  if (!deleted) {
+    return { success: false, message: "Session not found or already removed" };
+  }
 
   return { success: true, message: "Logged out successfully" };
 };

@@ -12,7 +12,8 @@ interface SessionAttributes {
   createdOn: Date;
 }
 
-export interface SessionInput extends Optional<SessionAttributes, "session_id"> {}
+export interface SessionInput
+  extends Optional<SessionAttributes, "session_id"> {}
 
 class Sessions
   extends Model<SessionAttributes, SessionInput>
@@ -29,13 +30,6 @@ class Sessions
 
 Sessions.init(
   {
-    // session_id: {
-    //   field: "Session_ID",
-    //   allowNull: false,
-    //   autoIncrement: true,
-    //   primaryKey: true,
-    //   type: DataTypes.INTEGER,
-    // },
     user_id: {
       field: "User_ID",
       allowNull: false,
