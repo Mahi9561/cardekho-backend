@@ -57,7 +57,7 @@ CarModel.init(
       allowNull: false,
     },
     create_at: {
-      field: "Create_At",
+      field: "created_at",
       type: DataTypes.DATE(6),
       allowNull: false,
       defaultValue: DataTypes.NOW,

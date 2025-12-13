@@ -39,7 +39,7 @@ class Variant
 Variant.init(
   {
     varient_id: {
-      field: "Varient_ID",
+      field: "variant_id",
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
@@ -61,7 +61,7 @@ Variant.init(
       allowNull: false,
     },
     transmisstion: {
-      field: "Transmisstion",
+      field: "transmission",
       type: DataTypes.STRING,
       allowNull: false,
     },
@@ -71,7 +71,7 @@ Variant.init(
       allowNull: false,
     },
     create_at: {
-      field: "Create_At",
+      field: "created_at",
       type: DataTypes.DATE(6),
       allowNull: false,
       defaultValue: DataTypes.NOW,

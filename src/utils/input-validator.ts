@@ -17,3 +17,10 @@ export const validateWithSchema = (schema: Schema, payload: any) => {
     throw new ClientInputError(`${missingParams.join(", ")}`);
   }
 };
+
+export class NotFoundError extends Error {
+  statusCode = 404;
+  constructor(message: string) {
+    super(message);
+  }
+}

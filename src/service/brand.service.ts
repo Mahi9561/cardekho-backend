@@ -1,4 +1,5 @@
 import Brand from "../models/brands";
+import ClientInputError from "../utils/error-handler";
 import { Brands, UpdateBrands } from "../utils/interface/brand.interface";
 
 export const brandService = async (body: Brands) => {
@@ -7,7 +8,7 @@ export const brandService = async (body: Brands) => {
   });
 
   if (existingBrand) {
-    throw new Error("Brand already exists");
+    throw new ClientInputError("Brand already exists");
   }
 
   const newBrand = await Brand.create({
@@ -25,6 +26,7 @@ export const brandService = async (body: Brands) => {
     data: newBrand,
   };
 };
+
 export const updateBrandService = async (body: UpdateBrands) => {
   const brand = await Brand.findOne({
     where: { brand_id: body.brand_id },
