@@ -1,9 +1,9 @@
 import { Router } from "express";
-import { getAllCars } from "../controllers/cars/car.controller";
+import { getAllCars, getCarById } from "../controllers/cars/car.controller";
 
 const router = Router();
 
 router.get("/getAllCars", getAllCars);
-// router.get("/car:id", getCarById);
+router.get("/:id", getCarById);
 
 export default router;

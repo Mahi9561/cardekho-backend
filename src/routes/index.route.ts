@@ -9,10 +9,10 @@ import { authMiddleware } from "../middleware/authMiddleware";
 const routes = Router();
 
 routes.use("/auth", authRoutes);
+routes.use("/cars", carsRoutes);
 routes.use(authMiddleware);
 routes.use("/brand", brandRoutes);
 routes.use("/model", modelRoutes);
 routes.use("/variant", variantRoutes);
-routes.use("/cars", carsRoutes);
 
 export default routes;
