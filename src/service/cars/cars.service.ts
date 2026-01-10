@@ -114,8 +114,7 @@ export const getAllCars = async (filters?: Record<string, unknown>) => {
   return {
     statuscode: 200,
     response: {
-      message: "Cars fetched successfully",
-      data: cars,
+      cars,
     },
   };
 };
