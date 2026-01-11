@@ -62,14 +62,11 @@ export const updateBrandService = async (body: UpdateBrands) => {
 
 export const getAllBrands = async () => {
   const brands = await Brand.findAll({
-    attributes: ["name", "logo_url"],
+    attributes: ["brand_id","name", "logo_url"],
   });
 
   return {
     statuscode: 200,
-    response: {
-      message: "Brands fetched successfully",
-    },
     data: brands,
   };
 };
