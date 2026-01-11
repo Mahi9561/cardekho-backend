@@ -87,6 +87,7 @@ export const getAllCars = async (filters?: Record<string, unknown>) => {
   const cars = await sequelize.query(
     `
     SELECT
+      v.variant_id AS id,
       b.name AS brand_name,
       m.name AS model_name,
       m.launch_year,
