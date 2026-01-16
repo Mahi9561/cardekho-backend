@@ -36,7 +36,6 @@ const carFilterSchema = new Schema({
     size: { min: 0 },
   },
 
-  // 🔽 VARIANT SPECS
   mileage_min: {
     type: Number,
     required: false,
