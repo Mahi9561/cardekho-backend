@@ -61,7 +61,13 @@ Sessions.init(
       defaultValue: DataTypes.NOW,
       allowNull: false,
     },
-    session_id: ""
+    session_id: {
+      field: "Session_ID",
+      allowNull: false,
+      autoIncrement: true,
+      primaryKey: true,
+      type: DataTypes.INTEGER,
+    },
   },
   {
     sequelize,

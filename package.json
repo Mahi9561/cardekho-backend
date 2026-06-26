@@ -27,7 +27,7 @@
     "jsonwebtoken": "^9.0.2",
     "multer": "^2.0.2",
     "mysql2": "^3.15.3",
-    "sequelize": "^6.37.7",
+    "sequelize": "^6.34.0",
     "validate": "^5.2.0"
   },
   "devDependencies": {
@@ -37,9 +37,8 @@
     "@types/express": "^5.0.3",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^24.6.2",
-    "@types/sequelize": "^4.28.20",
-    "nodemon": "^3.1.10",
-    "ts-node": "^1.7.1",
+    "nodemon": "^3.1.14",
+    "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
   }
 }
