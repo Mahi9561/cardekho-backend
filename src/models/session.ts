@@ -3,7 +3,7 @@ import { DataTypes, Optional, Model } from "sequelize";
 import sequelize from ".";
 
 interface SessionAttributes {
-  session_id: number;
+  id: number;
   user_id: number;
   token: string;
   device: string | null;
@@ -13,13 +13,13 @@ interface SessionAttributes {
 }
 
 export interface SessionInput
-  extends Optional<SessionAttributes, "session_id"> {}
+  extends Optional<SessionAttributes, "id"> {}
 
 class Sessions
   extends Model<SessionAttributes, SessionInput>
   implements SessionAttributes
 {
-  public session_id!: number;
+  public id!: number;
   public user_id!: number;
   public token!: string;
   public device!: string | null;
@@ -61,8 +61,8 @@ Sessions.init(
       defaultValue: DataTypes.NOW,
       allowNull: false,
     },
-    session_id: {
-      field: "Session_ID",
+    id: {
+      field: "ID",
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,

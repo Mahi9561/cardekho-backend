@@ -1,11 +1,7 @@
 import { Op } from "sequelize";
 import User from "../models/users";
 import Session from "../models/session";
-import {
-  DatabaseError,
-  NotFoundError,
-  TokenExpiredError,
-} from "../utils/error-handler";
+import { DatabaseError } from "../utils/error-handler";
 import { loginData, userData } from "../utils/interface/users";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
@@ -120,6 +116,56 @@ export const loginUser = async (Users: loginData) => {
         token,
         Success: "Login successful",
       },
+    };
+  } catch (error: any) {
+    throw new DatabaseError(error);
+  }
+};
+
+export const logoutUser = async (token: string) => {
+  try {
+    const session = await Session.findOne({
+      where: { token },
+    });
+
+    if (!session) {
+      return {
+        statusCode: 404,
+        message: "Session not found",
+      };
+    }
+
+    await Session.destroy({
+      where: { token },
+    });
+
+    return {
+      statusCode: 200,
+      message: "Logout successful",
+    };
+  } catch (error: any) {
+    throw new DatabaseError(error);
+  }
+};
+
+export const myProfile = async (user_id: number) => {
+  try {
+    const user = await User.findByPk(user_id, {
+      attributes: {
+        exclude: ["password"],
+      },
+    });
+
+    if (!user) {
+      return {
+        statusCode: 404,
+        message: "User not found",
+      };
+    }
+
+    return {
+      statusCode: 200,
+      message: user,
     };
   } catch (error: any) {
     throw new DatabaseError(error);
