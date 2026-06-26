@@ -20,3 +20,8 @@ export interface userData {
   createdOn?: Date;
   updatedOn?: Date;
 }
+
+export interface loginData {
+  email: string;
+  password: string;
+}

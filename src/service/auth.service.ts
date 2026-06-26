@@ -1,27 +1,38 @@
+import { Op } from "sequelize";
 import User from "../models/users";
-import { DatabaseError } from "../utils/error-handler";
-import { userData } from "../utils/interface/users";
+import Session from "../models/session";
+import {
+  DatabaseError,
+  NotFoundError,
+  TokenExpiredError,
+} from "../utils/error-handler";
+import { loginData, userData } from "../utils/interface/users";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 export const registerUser = async (Users: userData) => {
   try {
-    const existingEmail = await User.findOne({ where: { email: Users.email } });
-    if (existingEmail) {
-      return {
-        statusCode: 409,
-        message: "Email already registered",
-      };
-    }
+    const existingUser = await User.findOne({
+      where: {
+        [Op.or]: [{ email: Users.email }, { phone: Users.phone }],
+      },
+    });
 
-    const existingPhone = await User.findOne({ where: { phone: Users.phone } });
-    if (existingPhone) {
-      return {
-        statusCode: 409,
-        message: "Phone number already registered",
-      };
-    }
+    if (existingUser) {
+      if (existingUser.email === Users.email) {
+        return {
+          statusCode: 409,
+          message: "Email already registered",
+        };
+      }
 
+      if (existingUser.phone === Users.phone) {
+        return {
+          statusCode: 409,
+          message: "Phone number already registered",
+        };
+      }
+    }
     const hashedPassword = await bcrypt.hash(Users.password, 10);
 
     await User.create({
@@ -45,6 +56,70 @@ export const registerUser = async (Users: userData) => {
     return {
       statusCode: 201,
       message: "User registered successfully",
+    };
+  } catch (error: any) {
+    throw new DatabaseError(error);
+  }
+};
+
+export const loginUser = async (Users: loginData) => {
+  try {
+    const user = await User.findOne({ where: { email: Users.email } });
+    if (!user) {
+      return {
+        statusCode: 404,
+        message: "User not found",
+      };
+    }
+
+    const isMatch = await bcrypt.compare(Users.password, user.password);
+    if (!isMatch) {
+      return {
+        statusCode: 401,
+        message: "Password is incorrect",
+      };
+    }
+
+    const token = jwt.sign(
+      {
+        id: user.user_id,
+        email: user.email,
+        role: user.role,
+      },
+      process.env.JWT_SECRET ?? "mysecretkey",
+      { expiresIn: "1d" },
+    );
+
+    try {
+      console.debug("Creating session for user:", user.user_id);
+      console.debug("Session payload:", {
+        user_id: user.user_id,
+        token: token?.substring(0, 10) + "...",
+        device: "web",
+      });
+
+      await Session.create({
+        user_id: user.user_id,
+        token,
+        device: "web",
+        ip_address: "0.0.0.0",
+        expiresAt: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
+        createdOn: new Date(),
+      });
+      console.log("Session created successfully", { user_id: user.user_id });
+    } catch (sessionError) {
+      // Log session creation error with details but don't fail login
+      if (sessionError && (sessionError as any).stack) {
+        console.error((sessionError as any).stack);
+      }
+    }
+
+    return {
+      statusCode: 200,
+      message: {
+        token,
+        Success: "Login successful",
+      },
     };
   } catch (error: any) {
     throw new DatabaseError(error);
